@@ -1,13 +1,8 @@
-const { resolve } = require("path");
-const root = resolve(__dirname, "./../");
-const rootConfig = require(`${root}/jest.config.js`);
+import { SetupServer } from "@src/server";
+import supertest from "supertest";
 
-module.exports = {
-  ...rootConfig,
-  ...{
-    rootDir: root,
-    displayName: "e2e-tests",
-    setupFilesAfterEnv: ["<rootDir>/test/jest-setup.ts"],
-    testMatch: ["<rootDir>/test/**/*.test.ts"],
-  },
-};
+beforeAll(() => {
+  const server = new SetupServer();
+  server.init();
+  global.testRequest = supertest(server.getApp());
+});
